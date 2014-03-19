@@ -1,0 +1,15 @@
+#!/bin/bash
+
+IFS=$'\n'
+devlist=(`networksetup -listnetworkserviceorder | grep Hardware | sed -e 's/^(H.*rt: \(.*\), Device: \(.*\))/\1/' -e 's/[()\*#]//g' | uniq`)
+
+tLen=${#devlist[@]}
+
+echo My device list:
+for (( i=0; i<${tLen}; i++ ));
+do 
+/usr/sbin/networksetup -setsearchdomains "${devlist[$i]}" emea.local na.local ap.local
+done
+echo
+
+exit 0
