@@ -1,0 +1,14 @@
+#!/bin/sh
+
+jssurl="https://jss"
+user="read"
+pass="Janux7ba"
+MAC=`ifconfig en0 | grep ether | cut -f2 -d "r" | sed 's/:/%3A/g' | sed 's/^ *//g'`
+id=`/usr/bin/curl -k -u $user:$pass "$jssurl/JSSResource/computers/macaddress/$MAC" -X GET | xpath //computer/general/id | cut -f2 -d ">" | cut -f1 -d "<"`
+site=`/usr/bin/curl -k -u $user:$pass "$jssurl/JSSResource/computers/id/$id" -X GET | xpath //computer/general/site/name | cut -f2 -d ">" | cut -f1 -d "<"`
+
+if [ "$site" == "None" ]; then
+echo "<result>No Site</result>"
+else
+echo "<result>$site</result>"
+fi
