@@ -1,0 +1,13 @@
+#!/bin/bash
+
+netBIOSname="$(dsconfigad -show | grep "Computer Account" | awk -F"=" '{ print $2 }' | cut -c 2- | sed -e 's/.\{1\}$//' | tr '[:lower:]' '[:upper:]')"
+if [ "$netBIOSname" == "" ];then
+	exit 0
+fi
+
+computerName="$(scutil --get ComputerName | tr '[:lower:]' '[:upper:]')"
+
+if [ "$computerName" != "$netBIOSname" ];then
+	scutil --set ComputerName "$netBIOSname"
+	scutil --set LocalHostName "$netBIOSname"
+fi
